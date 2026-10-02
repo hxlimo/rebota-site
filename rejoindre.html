@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rejoindre une partie · Rebota</title>
+<meta name="description" content="Rebota — trouver des joueurs de padel de son niveau en Algérie.">
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 0 20px 80px;
+    background: linear-gradient(160deg, #0E2842 0%, #061323 55%, #061323 100%);
+    background-attachment: fixed;
+    color: #F2F7FB;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 720px; margin: 0 auto; }
+  header { padding: 40px 0 8px; }
+  header img { height: 34px; }
+  h1 { font-size: 1.9rem; line-height: 1.2; margin: 28px 0 6px; letter-spacing: -0.02em; }
+  .sous { color: #A7BCD0; margin: 0 0 20px; }
+  .date {
+    display: inline-block; border: 1px solid rgba(255,255,255,.13);
+    background: #193755; border-radius: 999px;
+    padding: 6px 14px; font-size: .85rem; color: #8AA2B9;
+  }
+  h2 { font-size: 1.12rem; margin: 40px 0 10px; color: #F2F7FB; }
+  p { color: #A7BCD0; margin: 10px 0; }
+  a { color: #C6F04B; }
+  nav { margin: 34px 0 0; display: flex; flex-wrap: wrap; gap: 18px; }
+  footer {
+    margin-top: 56px; padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,.13);
+    color: #8AA2B9; font-size: .9rem;
+  }
+  @media (max-width: 480px) { h1 { font-size: 1.55rem; } }
+</style>
+</head>
+<body>
+<div class="page">
+<header><a href="./"><img src="./logo.png" alt="Rebota"></a></header>
+<h1>Rejoindre une partie</h1>
+<p class="sous">On t’a invité à une partie de padel sur Rebota.</p>
+<p id="etat">Ouverture de l’application…</p>
+<div id="secours" hidden>
+  <h2>L’application ne s’est pas ouverte</h2>
+  <p>C’est qu’elle n’est pas encore installée sur ce téléphone. Rebota arrive
+  bientôt sur l’App Store et Google Play — en attendant, demande le lien
+  d’installation à la personne qui t’a invité.</p>
+  <p id="rappel-code" hidden>Une fois l’application installée, ouvre-la et entre
+  ce code : <strong id="code"></strong></p>
+  <p><a href="./">En savoir plus sur Rebota</a></p>
+</div>
+<script>
+  // Pas de bibliothèque, pas de requête : cette page doit s'ouvrir vite, sur un
+  // réseau algérien, et ne rien apprendre sur qui la consulte.
+  var q = new URLSearchParams(location.search);
+  var partie = q.get('p') || '';
+  var code = q.get('c') || '';
+
+  // Un identifiant de partie est un UUID, un code fait six caractères. On
+  // n'accepte rien d'autre : ce qui vient de l'adresse n'est pas de confiance,
+  // et c'est écrit dans la page juste en dessous.
+  var partieOk = /^[0-9a-fA-F-]{36}$/.test(partie);
+  var codeOk = /^[0-9A-Za-z]{6}$/.test(code);
+
+  if (codeOk) {
+    document.getElementById('code').textContent = code;
+    document.getElementById('rappel-code').hidden = false;
+  }
+
+  if (partieOk || codeOk) {
+    // Toujours la partie quand on l'a : l'app sait ouvrir cet écran. Avec le
+    // code seul, on ouvre simplement l'app — le code est affiché juste en
+    // dessous, et l'accueil a un bouton « J'ai un code ».
+    var cible = partieOk ? 'rebota://partie/' + partie : 'rebota://';
+    // Si l'app s'ouvre, la page passe en arrière-plan et le minuteur ne sert
+    // plus à rien. Sinon, il affiche le secours.
+    var minuteur = setTimeout(montrerSecours, 1500);
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) clearTimeout(minuteur);
+    });
+    location.href = cible;
+  } else {
+    montrerSecours();
+  }
+
+  function montrerSecours() {
+    document.getElementById('etat').hidden = true;
+    document.getElementById('secours').hidden = false;
+  }
+</script>
+<footer>
+  Rebota — trouver les joueurs qui manquent, en Algérie.<br>
+  <a href="mailto:rebota.app@gmail.com">rebota.app@gmail.com</a>
+</footer>
+</div>
+</body>
+</html>

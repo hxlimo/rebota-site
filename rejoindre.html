@@ -41,8 +41,8 @@
 <body>
 <div class="page">
 <header><a href="./"><img src="./logo.png" alt="Rebota"></a></header>
-<h1>Rejoindre une partie</h1>
-<p class="sous">On t’a invité à une partie de padel sur Rebota.</p>
+<h1 id="titre">Rejoindre une partie</h1>
+<p class="sous" id="sous">On t’a invité à une partie de padel sur Rebota.</p>
 <p id="etat">Ouverture de l’application…</p>
 <div id="secours" hidden>
   <h2>L’application ne s’est pas ouverte</h2>
@@ -59,23 +59,35 @@
   var q = new URLSearchParams(location.search);
   var partie = q.get('p') || '';
   var code = q.get('c') || '';
+  var groupe = q.get('g') || '';
 
   // Un identifiant de partie est un UUID, un code fait six caractères. On
   // n'accepte rien d'autre : ce qui vient de l'adresse n'est pas de confiance,
   // et c'est écrit dans la page juste en dessous.
   var partieOk = /^[0-9a-fA-F-]{36}$/.test(partie);
   var codeOk = /^[0-9A-Za-z]{6}$/.test(code);
+  // Le code d'un groupe : six caractères, sans 0/O ni 1/I.
+  var groupeOk = /^[A-HJ-NP-Z2-9]{6}$/i.test(groupe);
 
-  if (codeOk) {
-    document.getElementById('code').textContent = code;
+  if (groupeOk && !partieOk) {
+    document.getElementById('titre').textContent = 'Rejoindre un groupe';
+    document.getElementById('sous').textContent = 'On t’a invité dans un groupe de joueurs de padel sur Rebota.';
+  }
+
+  if (codeOk || groupeOk) {
+    document.getElementById('code').textContent = codeOk ? code : groupe.toUpperCase();
     document.getElementById('rappel-code').hidden = false;
   }
 
-  if (partieOk || codeOk) {
+  if (partieOk || codeOk || groupeOk) {
     // Toujours la partie quand on l'a : l'app sait ouvrir cet écran. Avec le
     // code seul, on ouvre simplement l'app — le code est affiché juste en
     // dessous, et l'accueil a un bouton « J'ai un code ».
-    var cible = partieOk ? 'rebota://partie/' + partie : 'rebota://';
+    var cible = partieOk
+      ? 'rebota://partie/' + partie + (codeOk ? '?c=' + code.toUpperCase() : '')
+      : groupeOk
+        ? 'rebota://groupe/' + groupe.toUpperCase()
+        : 'rebota://';
     // Si l'app s'ouvre, la page passe en arrière-plan et le minuteur ne sert
     // plus à rien. Sinon, il affiche le secours.
     var minuteur = setTimeout(montrerSecours, 1500);

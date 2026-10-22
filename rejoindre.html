@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rejoindre une partie · Rebota</title>
-<meta name="description" content="Rebota — trouver des joueurs de padel de son niveau en Algérie.">
+<title>Rejoindre une partie · Playbota</title>
+<meta name="description" content="Playbota — trouver des joueurs de padel de son niveau en Algérie.">
 <style>
   :root { color-scheme: dark; }
   * { box-sizing: border-box; }
@@ -40,18 +40,18 @@
 </head>
 <body>
 <div class="page">
-<header><a href="./"><img src="./logo.png" alt="Rebota"></a></header>
+<header><a href="./"><img src="./logo.png" alt="Playbota"></a></header>
 <h1 id="titre">Rejoindre une partie</h1>
-<p class="sous" id="sous">On t’a invité à une partie de padel sur Rebota.</p>
+<p class="sous" id="sous">On t’a invité à une partie de padel sur Playbota.</p>
 <p id="etat">Ouverture de l’application…</p>
 <div id="secours" hidden>
   <h2>L’application ne s’est pas ouverte</h2>
-  <p>C’est qu’elle n’est pas encore installée sur ce téléphone. Rebota arrive
+  <p>C’est qu’elle n’est pas encore installée sur ce téléphone. Playbota arrive
   bientôt sur l’App Store et Google Play — en attendant, demande le lien
   d’installation à la personne qui t’a invité.</p>
   <p id="rappel-code" hidden>Une fois l’application installée, ouvre-la et entre
   ce code : <strong id="code"></strong></p>
-  <p><a href="./">En savoir plus sur Rebota</a></p>
+  <p><a href="./">En savoir plus sur Playbota</a></p>
 </div>
 <script>
   // Pas de bibliothèque, pas de requête : cette page doit s'ouvrir vite, sur un
@@ -60,6 +60,7 @@
   var partie = q.get('p') || '';
   var code = q.get('c') || '';
   var groupe = q.get('g') || '';
+  var joueur = q.get('j') || '';
 
   // Un identifiant de partie est un UUID, un code fait six caractères. On
   // n'accepte rien d'autre : ce qui vient de l'adresse n'est pas de confiance,
@@ -68,10 +69,18 @@
   var codeOk = /^[0-9A-Za-z]{6}$/.test(code);
   // Le code d'un groupe : six caractères, sans 0/O ni 1/I.
   var groupeOk = /^[A-HJ-NP-Z2-9]{6}$/i.test(groupe);
+  // Un joueur : son identifiant interne (UUID). La page ne montre rien de lui.
+  var joueurOk = /^[0-9a-fA-F-]{36}$/.test(joueur);
+
+  if (joueurOk && !partieOk) {
+    document.title = 'Voir un joueur · Playbota';
+    document.getElementById('titre').textContent = 'Voir un joueur';
+    document.getElementById('sous').textContent = 'On t’a envoyé le profil d’un joueur de padel sur Playbota.';
+  }
 
   if (groupeOk && !partieOk) {
     document.getElementById('titre').textContent = 'Rejoindre un groupe';
-    document.getElementById('sous').textContent = 'On t’a invité dans un groupe de joueurs de padel sur Rebota.';
+    document.getElementById('sous').textContent = 'On t’a invité dans un groupe de joueurs de padel sur Playbota.';
   }
 
   if (codeOk || groupeOk) {
@@ -79,7 +88,7 @@
     document.getElementById('rappel-code').hidden = false;
   }
 
-  if (partieOk || codeOk || groupeOk) {
+  if (partieOk || codeOk || groupeOk || joueurOk) {
     // Toujours la partie quand on l'a : l'app sait ouvrir cet écran. Avec le
     // code seul, on ouvre simplement l'app — le code est affiché juste en
     // dessous, et l'accueil a un bouton « J'ai un code ».
@@ -87,7 +96,9 @@
       ? 'rebota://partie/' + partie + (codeOk ? '?c=' + code.toUpperCase() : '')
       : groupeOk
         ? 'rebota://groupe/' + groupe.toUpperCase()
-        : 'rebota://';
+        : joueurOk
+          ? 'rebota://joueur/' + joueur
+          : 'rebota://';
     // Si l'app s'ouvre, la page passe en arrière-plan et le minuteur ne sert
     // plus à rien. Sinon, il affiche le secours.
     var minuteur = setTimeout(montrerSecours, 1500);
@@ -105,7 +116,7 @@
   }
 </script>
 <footer>
-  Rebota — trouver les joueurs qui manquent, en Algérie.<br>
+  Playbota — trouver les joueurs qui manquent, en Algérie.<br>
   <a href="mailto:rebota.app@gmail.com">rebota.app@gmail.com</a>
 </footer>
 </div>

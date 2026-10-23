@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rejoindre une partie · Playbota</title>
-<meta name="description" content="Playbota — trouver des joueurs de padel de son niveau en Algérie.">
+<meta name="description" content="Playbota : trouver des joueurs de padel de son niveau en Algérie.">
 <style>
   :root { color-scheme: dark; }
   * { box-sizing: border-box; }
@@ -47,7 +47,7 @@
 <div id="secours" hidden>
   <h2>L’application ne s’est pas ouverte</h2>
   <p>C’est qu’elle n’est pas encore installée sur ce téléphone. Playbota arrive
-  bientôt sur l’App Store et Google Play — en attendant, demande le lien
+  bientôt sur l’App Store et Google Play. En attendant, demande le lien
   d’installation à la personne qui t’a invité.</p>
   <p id="rappel-code" hidden>Une fois l’application installée, ouvre-la et entre
   ce code : <strong id="code"></strong></p>
@@ -90,7 +90,7 @@
 
   if (partieOk || codeOk || groupeOk || joueurOk) {
     // Toujours la partie quand on l'a : l'app sait ouvrir cet écran. Avec le
-    // code seul, on ouvre simplement l'app — le code est affiché juste en
+    // code seul, on ouvre simplement l'app, le code est affiché juste en
     // dessous, et l'accueil a un bouton « J'ai un code ».
     var cible = partieOk
       ? 'rebota://partie/' + partie + (codeOk ? '?c=' + code.toUpperCase() : '')
@@ -116,7 +116,7 @@
   }
 </script>
 <footer>
-  Playbota — trouver les joueurs qui manquent, en Algérie.<br>
+  Playbota : trouver les joueurs qui manquent, en Algérie.<br>
   <a href="mailto:rebota.app@gmail.com">rebota.app@gmail.com</a>
 </footer>
 </div>

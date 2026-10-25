@@ -29,6 +29,7 @@
   h2 { font-size: 1.12rem; margin: 40px 0 10px; color: #F2F7FB; }
   p { color: #A7BCD0; margin: 10px 0; }
   a { color: #C6F04B; }
+  a.bouton { display: inline-block; background: #C6F04B; color: #0A1A2F; font-weight: 700; text-decoration: none; padding: 12px 20px; border-radius: 999px; }
   nav { margin: 34px 0 0; display: flex; flex-wrap: wrap; gap: 18px; }
   footer {
     margin-top: 56px; padding-top: 20px;
@@ -46,11 +47,12 @@
 <p id="etat">Ouverture de l’application…</p>
 <div id="secours" hidden>
   <h2>L’application ne s’est pas ouverte</h2>
-  <p>C’est qu’elle n’est pas encore installée sur ce téléphone. Playbota arrive
-  bientôt sur l’App Store et Google Play. En attendant, demande le lien
-  d’installation à la personne qui t’a invité.</p>
+  <p>C’est qu’elle n’est pas encore installée sur ce téléphone. Sur iPhone, installe-la
+  avec le bouton ci-dessous (par TestFlight, l’app d’Apple pour les versions d’essai).
+  Sur Android, elle arrive très bientôt sur Google Play.</p>
   <p id="rappel-code" hidden>Une fois l’application installée, ouvre-la et entre
   ce code : <strong id="code"></strong></p>
+  <p><a class="bouton" href="https://testflight.apple.com/join/mwSThNGY">Installer sur iPhone</a></p>
   <p><a href="./">En savoir plus sur Playbota</a></p>
 </div>
 <script>
